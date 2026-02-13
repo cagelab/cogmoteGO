@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"log/slog"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/Ccccraz/cogmoteGO/internal/commonTypes"
@@ -111,28 +113,43 @@ func parseEmailPayload(c *gin.Context) (emailPayload, bool) {
 }
 
 func loadEmailConfig(c *gin.Context) (emailConfig, bool) {
+	// Environment variables take priority over config/keyring.
+	sendEmail := strings.TrimSpace(os.Getenv("COGMOTE_EMAIL_ADDRESS"))
+	smtpHost := strings.TrimSpace(os.Getenv("COGMOTE_SMTP_HOST"))
+	smtpPortStr := strings.TrimSpace(os.Getenv("COGMOTE_SMTP_PORT"))
+	password := strings.TrimSpace(os.Getenv("COGMOTE_EMAIL_PASSWORD"))
+
+	var smtpPort int
+	if smtpPortStr != "" {
+		if v, err := strconv.Atoi(smtpPortStr); err == nil {
+			smtpPort = v
+		}
+	}
+
+	// Fall back to config file values when env vars are not set.
 	emailSection := viper.Sub("email")
-	if emailSection == nil {
-		logger.Logger.Error("email configuration not found")
-		respondError(c, http.StatusInternalServerError, "email configuration not found", "")
-		return emailConfig{}, false
+
+	if sendEmail == "" && emailSection != nil {
+		sendEmail = strings.TrimSpace(emailSection.GetString("address"))
+	}
+	if smtpHost == "" && emailSection != nil {
+		smtpHost = strings.TrimSpace(emailSection.GetString("smtp_host"))
+	}
+	if smtpPort <= 0 && emailSection != nil {
+		smtpPort = emailSection.GetInt("smtp_port")
 	}
 
-	sendEmail := strings.TrimSpace(emailSection.GetString("send_email"))
+	// Validate required fields.
 	if sendEmail == "" {
-		logger.Logger.Error("send_email not configured")
-		respondError(c, http.StatusInternalServerError, "send_email not configured", "")
+		logger.Logger.Error("email address not configured")
+		respondError(c, http.StatusInternalServerError, "email address not configured", "")
 		return emailConfig{}, false
 	}
-
-	smtpHost := strings.TrimSpace(emailSection.GetString("smtp_host"))
 	if smtpHost == "" {
 		logger.Logger.Error("smtp_host not configured")
 		respondError(c, http.StatusInternalServerError, "smtp_host not configured", "")
 		return emailConfig{}, false
 	}
-
-	smtpPort := emailSection.GetInt("smtp_port")
 	if smtpPort <= 0 {
 		logger.Logger.Error("smtp_port not configured",
 			slog.Group(logKey,
@@ -143,7 +160,11 @@ func loadEmailConfig(c *gin.Context) (emailConfig, bool) {
 		return emailConfig{}, false
 	}
 
-	rawRecipients := emailSection.GetStringSlice("send_email_to")
+	// Recipients come from the config file only.
+	var rawRecipients []string
+	if emailSection != nil {
+		rawRecipients = emailSection.GetStringSlice("recipients")
+	}
 	recipients := make([]string, 0, len(rawRecipients))
 	for _, recipient := range rawRecipients {
 		recipient = strings.TrimSpace(recipient)
@@ -152,20 +173,24 @@ func loadEmailConfig(c *gin.Context) (emailConfig, bool) {
 		}
 	}
 	if len(recipients) == 0 {
-		logger.Logger.Error("send_email_to not configured")
-		respondError(c, http.StatusInternalServerError, "send_email_to not configured", "")
+		logger.Logger.Error("recipients not configured")
+		respondError(c, http.StatusInternalServerError, "recipients not configured", "")
 		return emailConfig{}, false
 	}
 
-	password, err := keyring.GetPassword(sendEmail)
-	if err != nil {
-		logger.Logger.Error("email password not found",
-			slog.Group(logKey,
-				slog.String("detail", err.Error()),
-			),
-		)
-		respondError(c, http.StatusInternalServerError, "email password not found", err.Error())
-		return emailConfig{}, false
+	// Fall back to keyring when the password env var is not set.
+	if password == "" {
+		var err error
+		password, err = keyring.GetPassword(sendEmail)
+		if err != nil {
+			logger.Logger.Error("email password not found",
+				slog.Group(logKey,
+					slog.String("detail", err.Error()),
+				),
+			)
+			respondError(c, http.StatusInternalServerError, "email password not found", err.Error())
+			return emailConfig{}, false
+		}
 	}
 
 	return emailConfig{
