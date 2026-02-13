@@ -282,6 +282,146 @@ func respondError(c *gin.Context, status int, userMessage string, detail string)
 	})
 }
 
+type recipientPayload struct {
+	Email string `json:"email"`
+}
+
+func GetRecipientsHandler(c *gin.Context) {
+	recipients := viper.GetStringSlice("email.recipients")
+	c.JSON(http.StatusOK, gin.H{"recipients": recipients})
+}
+
+func AddRecipientHandler(c *gin.Context) {
+	var payload recipientPayload
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		respondError(c, http.StatusBadRequest, "invalid payload", err.Error())
+		return
+	}
+
+	email := strings.TrimSpace(payload.Email)
+	if email == "" {
+		respondError(c, http.StatusBadRequest, "email cannot be empty", "")
+		return
+	}
+
+	recipients := viper.GetStringSlice("email.recipients")
+	for _, r := range recipients {
+		if strings.EqualFold(r, email) {
+			respondError(c, http.StatusConflict, "recipient already exists", "")
+			return
+		}
+	}
+
+	recipients = append(recipients, email)
+	if err := saveRecipients(recipients); err != nil {
+		respondError(c, http.StatusInternalServerError, "failed to save configuration", err.Error())
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"recipients": recipients})
+}
+
+func DeleteRecipientHandler(c *gin.Context) {
+	var payload recipientPayload
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		respondError(c, http.StatusBadRequest, "invalid payload", err.Error())
+		return
+	}
+
+	email := strings.TrimSpace(payload.Email)
+	if email == "" {
+		respondError(c, http.StatusBadRequest, "email cannot be empty", "")
+		return
+	}
+
+	recipients := viper.GetStringSlice("email.recipients")
+	filtered := make([]string, 0, len(recipients))
+	found := false
+	for _, r := range recipients {
+		if strings.EqualFold(r, email) {
+			found = true
+			continue
+		}
+		filtered = append(filtered, r)
+	}
+
+	if !found {
+		respondError(c, http.StatusNotFound, "recipient not found", "")
+		return
+	}
+
+	if err := saveRecipients(filtered); err != nil {
+		respondError(c, http.StatusInternalServerError, "failed to save configuration", err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"recipients": filtered})
+}
+
+func saveRecipients(recipients []string) error {
+	viper.Set("email.recipients", recipients)
+	if err := viper.WriteConfig(); err != nil {
+		configPath := viper.ConfigFileUsed()
+		if configPath == "" {
+			return err
+		}
+		return viper.WriteConfigAs(configPath)
+	}
+	return nil
+}
+
+func GetConfigHandler(c *gin.Context) {
+	address := viper.GetString("email.address")
+	smtpHost := viper.GetString("email.smtp_host")
+	smtpPort := viper.GetInt("email.smtp_port")
+	recipients := viper.GetStringSlice("email.recipients")
+
+	hasCredentials := false
+	if address != "" {
+		if _, err := keyring.GetPassword(address); err == nil {
+			hasCredentials = true
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"address":         address,
+		"smtp_host":       smtpHost,
+		"smtp_port":       smtpPort,
+		"recipients":      recipients,
+		"has_credentials": hasCredentials,
+	})
+}
+
+func PostTestEmailHandler(c *gin.Context) {
+	cfg, ok := loadEmailConfig(c)
+	if !ok {
+		return
+	}
+
+	message := mail.NewMsg()
+	if err := message.From(cfg.From); err != nil {
+		respondError(c, http.StatusInternalServerError, "failed to prepare test email", err.Error())
+		return
+	}
+	if err := message.To(cfg.Recipients...); err != nil {
+		respondError(c, http.StatusInternalServerError, "failed to prepare test email", err.Error())
+		return
+	}
+	message.Subject("cogmoteGO test email")
+	message.SetBodyString(mail.TypeTextHTML, "<p>This is a test email from <b>cogmoteGO</b>. Your email configuration is working correctly.</p>")
+
+	if !deliverEmail(c, cfg, message) {
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "test email sent successfully"})
+}
+
 func RegisterRoutes(r gin.IRouter) {
 	r.POST("/email", PostEmailHandler)
+	r.GET("/email/config", GetConfigHandler)
+	r.POST("/email/test", PostTestEmailHandler)
+	r.GET("/email/recipients", GetRecipientsHandler)
+	r.POST("/email/recipients", AddRecipientHandler)
+	r.DELETE("/email/recipients", DeleteRecipientHandler)
 }
