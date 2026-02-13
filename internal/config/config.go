@@ -10,10 +10,10 @@ import (
 )
 
 type EmailConfig struct {
-	SendEmail  string   `mapstructure:"send_email"`
+	Address    string   `mapstructure:"address"`
 	SMTPHost   string   `mapstructure:"smtp_host"`
 	SMTPPort   int      `mapstructure:"smtp_port"`
-	Subscriber []string `mapstructure:"send_email_to"`
+	Recipients []string `mapstructure:"recipients"`
 }
 
 type ProxyConfig struct {
@@ -31,10 +31,10 @@ type Config struct {
 func LoadConfig(cfgFile string) Config {
 	viper.SetConfigType("json")
 	// Provide sensible defaults so the binary works even without a config file.
-	viper.SetDefault("email.send_email", "")
+	viper.SetDefault("email.address", "")
 	viper.SetDefault("email.smtp_host", "")
 	viper.SetDefault("email.smtp_port", 0)
-	viper.SetDefault("email.send_email_to", []string{})
+	viper.SetDefault("email.recipients", []string{})
 
 	viper.SetDefault("proxy.handshake_timeout", 5000)
 	viper.SetDefault("proxy.msg_timeout", 5000)
