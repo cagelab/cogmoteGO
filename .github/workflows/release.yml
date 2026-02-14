@@ -100,7 +100,7 @@ jobs:
           retention-days: 1
 
   upload-release:
-    needs: build
+    needs: [release-please, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
