@@ -25,6 +25,7 @@ type ProxyConfig struct {
 }
 
 type Config struct {
+	Port       int         `mapstructure:"port"`
 	InstanceID string      `mapstructure:"instance_id"`
 	Email      EmailConfig `mapstructure:"email"`
 	Proxy      ProxyConfig `mapstructure:"proxy"`
@@ -37,6 +38,8 @@ func LoadConfig(cfgFile string) Config {
 	viper.SetDefault("email.smtp_host", "")
 	viper.SetDefault("email.smtp_port", 0)
 	viper.SetDefault("email.recipients", []string{})
+
+	viper.SetDefault("port", 9012)
 
 	viper.SetDefault("instance_id", "")
 
