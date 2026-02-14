@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/google/uuid"
 	"github.com/spf13/viper"
 )
 
@@ -24,8 +25,9 @@ type ProxyConfig struct {
 }
 
 type Config struct {
-	Email EmailConfig `mapstructure:"email"`
-	Proxy ProxyConfig `mapstructure:"proxy"`
+	InstanceID string      `mapstructure:"instance_id"`
+	Email      EmailConfig `mapstructure:"email"`
+	Proxy      ProxyConfig `mapstructure:"proxy"`
 }
 
 func LoadConfig(cfgFile string) Config {
@@ -35,6 +37,8 @@ func LoadConfig(cfgFile string) Config {
 	viper.SetDefault("email.smtp_host", "")
 	viper.SetDefault("email.smtp_port", 0)
 	viper.SetDefault("email.recipients", []string{})
+
+	viper.SetDefault("instance_id", "")
 
 	viper.SetDefault("proxy.handshake_timeout", 5000)
 	viper.SetDefault("proxy.msg_timeout", 5000)
@@ -80,6 +84,14 @@ func LoadConfig(cfgFile string) Config {
 	if err := viper.Unmarshal(&cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to parse config: %v\n", err)
 		return Config{}
+	}
+
+	if cfg.InstanceID == "" {
+		cfg.InstanceID = uuid.New().String()
+		viper.Set("instance_id", cfg.InstanceID)
+		if err := viper.WriteConfig(); err != nil {
+			fmt.Fprintf(os.Stderr, "failed to write instance_id to config: %v\n", err)
+		}
 	}
 
 	return cfg

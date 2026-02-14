@@ -161,6 +161,7 @@ func Serve() {
 	experiments.RegisterRoutes(api)
 	status.RegisterRoutes(api)
 	device.SetVersion(version, commit, datetime)
+	device.SetInstanceID(Config.InstanceID)
 	device.RegisterRoutes(api)
 	obs.RegisterRoutes(api)
 	email.RegisterRoutes(api)

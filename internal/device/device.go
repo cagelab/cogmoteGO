@@ -10,27 +10,33 @@ import (
 )
 
 var (
-	version  string
-	commit   string
-	datetime string
+	version    string
+	commit     string
+	datetime   string
+	instanceID string
 )
 
 type Device struct {
-	Username string `json:"username"`
-	Hostname string `json:"hostname"`
-	OS       string `json:"os"`
-	Arch     string `json:"arch"`
-	CPUModel string `json:"cpu"`
-	Uptime   uint64 `json:"uptime"`
-	Version  string `json:"version"`
-	Commit   string `json:"commit"`
-	Datetime string `json:"datetime"`
+	InstanceID string `json:"instance_id"`
+	Username   string `json:"username"`
+	Hostname   string `json:"hostname"`
+	OS         string `json:"os"`
+	Arch       string `json:"arch"`
+	CPUModel   string `json:"cpu"`
+	Uptime     uint64 `json:"uptime"`
+	Version    string `json:"version"`
+	Commit     string `json:"commit"`
+	Datetime   string `json:"datetime"`
 }
 
 func SetVersion(v string, c string, d string) {
 	version = v
 	commit = c
 	datetime = d
+}
+
+func SetInstanceID(id string) {
+	instanceID = id
 }
 
 func GetHealth(c *gin.Context) {
@@ -44,15 +50,16 @@ func GetHealth(c *gin.Context) {
 	}
 
 	healthReport := &Device{
-		Username: user.Username,
-		Hostname: hostInfo.Hostname,
-		OS:       hostInfo.OS,
-		Arch:     hostInfo.KernelArch,
-		CPUModel: cpuModel,
-		Uptime:   hostInfo.Uptime,
-		Version:  version,
-		Commit:   commit,
-		Datetime: datetime,
+		InstanceID: instanceID,
+		Username:   user.Username,
+		Hostname:   hostInfo.Hostname,
+		OS:         hostInfo.OS,
+		Arch:       hostInfo.KernelArch,
+		CPUModel:   cpuModel,
+		Uptime:     hostInfo.Uptime,
+		Version:    version,
+		Commit:     commit,
+		Datetime:   datetime,
 	}
 
 	c.JSON(http.StatusOK, healthReport)
