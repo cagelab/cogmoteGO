@@ -159,3 +159,59 @@ cogmoteGO email delete
 ```sh
 cogmoteGO email --help
 ```
+
+## Configuration
+
+Manage application settings via CLI.
+
+### Show configuration
+
+Show all configuration:
+
+```sh
+cogmoteGO config show
+```
+
+Show specific key:
+
+```sh
+cogmoteGO config show port
+```
+
+### Set configuration
+
+```sh
+cogmoteGO config set port 8080
+cogmoteGO config set proxy.max_retries 5
+```
+
+### Reset configuration
+
+Reset specific key to default:
+
+```sh
+cogmoteGO config reset port
+```
+
+Reset all configuration (email settings not affected):
+
+```sh
+cogmoteGO config reset
+```
+
+### Available settings
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `port` | 9012 | Server listening port |
+| `instance_id` | auto | Unique instance identifier |
+| `proxy.handshake_timeout` | 5000 | WebSocket handshake timeout (ms) |
+| `proxy.msg_timeout` | 5000 | Message timeout (ms) |
+| `proxy.max_retries` | 3 | Maximum retry attempts |
+| `proxy.retry_interval` | 200 | Retry interval (ms) |
+
+### For more info
+
+```sh
+cogmoteGO config --help
+```
