@@ -112,3 +112,50 @@ cogmoteGO service --help
 ```sh
 curl --location --request GET 'http://localhost:9012/api/device'
 ```
+
+## Email Configuration
+
+`cogmoteGO` supports sending email notifications. Credentials are securely stored in the system keyring.
+
+### Set email credentials
+
+Interactive setup (prompts for email and password):
+
+```sh
+cogmoteGO email set
+```
+
+With SMTP server options:
+
+```sh
+cogmoteGO email set --host smtp.example.com --port 587
+```
+
+### Show current configuration
+
+```sh
+cogmoteGO email show
+```
+
+Example output:
+
+```
+Email Configuration:
+  Email address : your@email.com
+  SMTP host     : smtp.example.com
+  SMTP port     : 587
+  Recipients    : recipient1@example.com, recipient2@example.com
+  Credentials   : configured
+```
+
+### Delete email configuration
+
+```sh
+cogmoteGO email delete
+```
+
+### For more info
+
+```sh
+cogmoteGO email --help
+```
