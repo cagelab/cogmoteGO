@@ -2,6 +2,16 @@
 
 cogmoteGO change log.
 
+## [0.1.31](https://github.com/cagelab/cogmoteGO/compare/v0.1.30...v0.1.31) (2026-02-14)
+
+
+### Features
+
+* :sparkles: add CLI config command for configuration management ([#158](https://github.com/cagelab/cogmoteGO/issues/158)) ([c88f36a](https://github.com/cagelab/cogmoteGO/commit/c88f36ae42fa111224b7c7f1a057be29c8fe9b48))
+* :sparkles: add email config and recipients management APIs ([#152](https://github.com/cagelab/cogmoteGO/issues/152)) ([fb8a38b](https://github.com/cagelab/cogmoteGO/commit/fb8a38b501e713880abaec93bb0724084b307c8f))
+* :sparkles: add instance unique identifier ([#153](https://github.com/cagelab/cogmoteGO/issues/153)) ([03ccab6](https://github.com/cagelab/cogmoteGO/commit/03ccab699793cd79f5fe18297bd97f64c3c3aed6))
+* :sparkles: make server port configurable ([#157](https://github.com/cagelab/cogmoteGO/issues/157)) ([ab230bc](https://github.com/cagelab/cogmoteGO/commit/ab230bc8c22b69176d227bdeecc1b5a925304151))
+
 ## [unreleased]
 
 ### 🚜 Refactor
