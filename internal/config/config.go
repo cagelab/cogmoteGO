@@ -24,11 +24,17 @@ type ProxyConfig struct {
 	RetryInterval    int `mapstructure:"retry_interval"`
 }
 
+type ObsConfig struct {
+	SceneName  string `mapstructure:"scene_name"`
+	SourceName string `mapstructure:"source_name"`
+}
+
 type Config struct {
 	Port       int         `mapstructure:"port"`
 	InstanceID string      `mapstructure:"instance_id"`
 	Email      EmailConfig `mapstructure:"email"`
 	Proxy      ProxyConfig `mapstructure:"proxy"`
+	Obs        ObsConfig   `mapstructure:"obs"`
 }
 
 func LoadConfig(cfgFile string) Config {
@@ -47,6 +53,9 @@ func LoadConfig(cfgFile string) Config {
 	viper.SetDefault("proxy.msg_timeout", 5000)
 	viper.SetDefault("proxy.max_retries", 3)
 	viper.SetDefault("proxy.retry_interval", 200)
+
+	viper.SetDefault("obs.scene_name", "cagelab")
+	viper.SetDefault("obs.source_name", "cogmoteGO")
 
 	configPath := cfgFile
 
