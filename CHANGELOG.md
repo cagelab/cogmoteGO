@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.33](https://github.com/cagelab/cogmoteGO/compare/v0.1.32...v0.1.33) (2026-02-15)
+
+
+### Bug Fixes
+
+* **obs:** :bug: use polling to wait for OBS process exit on Unix ([#174](https://github.com/cagelab/cogmoteGO/issues/174)) ([8262b27](https://github.com/cagelab/cogmoteGO/commit/8262b2756394fbc0dfb5f1dee894296d0abf01ea))
+
 ## [0.1.32](https://github.com/cagelab/cogmoteGO/compare/v0.1.31...v0.1.32) (2026-02-15)
 
 
