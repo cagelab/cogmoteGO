@@ -2,6 +2,14 @@
 
 cogmoteGO change log.
 
+## [0.1.36](https://github.com/cagelab/cogmoteGO/compare/v0.1.35...v0.1.36) (2026-02-15)
+
+
+### Bug Fixes
+
+* **ci:** :bug: use correct PowerShell parameter syntax for Windows build ([e326856](https://github.com/cagelab/cogmoteGO/commit/e326856181195e16f711d7ca383bee090564d927))
+* **obs:** :bug: set process group for OBS subprocess ([#181](https://github.com/cagelab/cogmoteGO/issues/181)) ([255727c](https://github.com/cagelab/cogmoteGO/commit/255727c8fe1edf88700efa96c491290c36b090b6))
+
 ## [0.1.35](https://github.com/cagelab/cogmoteGO/compare/v0.1.34...v0.1.35) (2026-02-15)
 
 
