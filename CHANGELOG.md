@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.35](https://github.com/cagelab/cogmoteGO/compare/v0.1.34...v0.1.35) (2026-02-15)
+
+
+### Bug Fixes
+
+* **obs:** :bug: use build tags for platform-specific process termination ([#178](https://github.com/cagelab/cogmoteGO/issues/178)) ([49627a4](https://github.com/cagelab/cogmoteGO/commit/49627a4dcfeb62d0ba6e9b47ebb72e7073a37d0c))
+
 ## [0.1.34](https://github.com/cagelab/cogmoteGO/compare/v0.1.33...v0.1.34) (2026-02-15)
 
 
