@@ -200,8 +200,13 @@ func stopObsProcess() error {
 		return nil
 	}
 
-	if err := proc.Signal(syscall.SIGTERM); err != nil {
-		return fmt.Errorf("failed to send SIGTERM to OBS: %w", err)
+	pgid, err := syscall.Getpgid(proc.Pid)
+	if err != nil {
+		return fmt.Errorf("failed to get process group: %w", err)
+	}
+
+	if err := syscall.Kill(-pgid, syscall.SIGTERM); err != nil {
+		return fmt.Errorf("failed to send SIGTERM to OBS process group: %w", err)
 	}
 
 	timeout := time.After(10 * time.Second)
@@ -211,8 +216,8 @@ func stopObsProcess() error {
 	for {
 		select {
 		case <-timeout:
-			if err := proc.Kill(); err != nil {
-				return fmt.Errorf("failed to kill OBS after timeout: %w", err)
+			if err := syscall.Kill(-pgid, syscall.SIGKILL); err != nil {
+				return fmt.Errorf("failed to kill OBS process group after timeout: %w", err)
 			}
 			obsProcess = nil
 			return fmt.Errorf("OBS did not exit gracefully, force killed")
