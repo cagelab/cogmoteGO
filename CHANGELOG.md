@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.34](https://github.com/cagelab/cogmoteGO/compare/v0.1.33...v0.1.34) (2026-02-15)
+
+
+### Bug Fixes
+
+* **obs:** :bug: kill entire process group for flatpak OBS ([#176](https://github.com/cagelab/cogmoteGO/issues/176)) ([feab478](https://github.com/cagelab/cogmoteGO/commit/feab47890c90c1769aeb01a671a6656520c99c85))
+
 ## [0.1.33](https://github.com/cagelab/cogmoteGO/compare/v0.1.32...v0.1.33) (2026-02-15)
 
 
