@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.32](https://github.com/cagelab/cogmoteGO/compare/v0.1.31...v0.1.32) (2026-02-15)
+
+
+### Features
+
+* **obs:** :sparkles: add OBS application control endpoints ([#171](https://github.com/cagelab/cogmoteGO/issues/171)) ([#172](https://github.com/cagelab/cogmoteGO/issues/172)) ([7a063fd](https://github.com/cagelab/cogmoteGO/commit/7a063fdd9c0a7d9819f57ec4efd4e39fc6fdf2e1))
+
 ## [0.1.31](https://github.com/cagelab/cogmoteGO/compare/v0.1.30...v0.1.31) (2026-02-14)
 
 
