@@ -17,8 +17,11 @@ Integration module between cogmoteGO and OBS Studio for overlaying experiment da
 ### CLI Configuration
 
 ```bash
-# Interactive configuration for scene, source, and password
+# Interactive configuration for scene, source, and install method
 cogmoteGO obs set
+
+# Set websocket password (stored in system keyring)
+cogmoteGO obs set-password
 
 # View current configuration status
 cogmoteGO obs show
@@ -26,6 +29,13 @@ cogmoteGO obs show
 # Delete saved password
 cogmoteGO obs delete-password
 ```
+
+### Install Method
+
+Supported install methods:
+
+- `system`: OBS installed via system package manager (default)
+- `flatpak`: OBS installed via Flatpak (`flatpak install com.obsproject.Studio`)
 
 ### Docker Environment
 
@@ -39,37 +49,45 @@ docker run -e OBS_PASSWORD=yourpassword ...
 
 ### Status
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/obs` | Get OBS status (version, streaming state) |
+| Method | Path       | Description                               |
+| ------ | ---------- | ----------------------------------------- |
+| GET    | `/api/obs` | Get OBS status (version, streaming state) |
+
+### Application Control
+
+| Method | Path             | Description           |
+| ------ | ---------------- | --------------------- |
+| POST   | `/api/obs/start` | Start OBS application |
+| POST   | `/api/obs/stop`  | Stop OBS application  |
 
 ### Initialization
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/obs/init` | Initialize OBS client connection |
+| Method | Path            | Description                      |
+| ------ | --------------- | -------------------------------- |
+| POST   | `/api/obs/init` | Initialize OBS client connection |
 
 ### Streaming Control
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/obs/start` | Start streaming |
-| POST | `/api/obs/stop` | Stop streaming |
+| Method | Path                       | Description     |
+| ------ | -------------------------- | --------------- |
+| POST   | `/api/obs/streaming/start` | Start streaming |
+| POST   | `/api/obs/streaming/stop`  | Stop streaming  |
 
 ### Data Overlay
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/obs/data` | Update overlay text data |
+| Method | Path            | Description              |
+| ------ | --------------- | ------------------------ |
+| POST   | `/api/obs/data` | Update overlay text data |
 
 ## Usage Flow
 
 ```
-1. Start OBS and ensure WebSocket server is running
+1. Call POST /api/obs/start to start OBS application
 2. Call POST /api/obs/init to initialize connection
-3. Call POST /api/obs/start to start streaming
+3. Call POST /api/obs/streaming/start to start streaming
 4. Call POST /api/obs/data to update experiment data
-5. Call POST /api/obs/stop to stop streaming
+5. Call POST /api/obs/streaming/stop to stop streaming
+6. Call POST /api/obs/stop to stop OBS application
 ```
 
 ## Init Response Example
@@ -106,3 +124,4 @@ Overlay text format: `{hostname} {monkey_name} {trial_id} {correct_rate}% {start
 - Scene and Source cannot share the same name
 - Text source is automatically positioned at the bottom of the screen (1920x1080 assumed)
 - Only supports local OBS connection (`localhost:4455`)
+- If OBS is already running, `/api/obs/app/start` will track the existing process

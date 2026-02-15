@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/exec"
 	"runtime"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/Ccccraz/cogmoteGO/internal/commonTypes"
 	"github.com/Ccccraz/cogmoteGO/internal/keyring"
@@ -44,6 +47,7 @@ type obsData struct {
 }
 
 var client *goobs.Client
+var obsProcess *os.Process
 
 func strPtr(s string) *string { return &s }
 
@@ -65,6 +69,158 @@ func getDeviceName() string {
 		return "unknown"
 	}
 	return hostInfo.Hostname
+}
+
+func getObsCommand() (*exec.Cmd, error) {
+	installMethod := viper.GetString("obs.install_method")
+	switch installMethod {
+	case "flatpak":
+		return exec.Command("flatpak", "run", "com.obsproject.Studio"), nil
+	case "system":
+		switch runtime.GOOS {
+		case "windows":
+			return exec.Command("obs64.exe"), nil
+		case "darwin":
+			return exec.Command("open", "-a", "OBS"), nil
+		default:
+			return exec.Command("obs"), nil
+		}
+	default:
+		return nil, fmt.Errorf("unknown obs install method: %s", installMethod)
+	}
+}
+
+func startObsProcess() error {
+	existingProc, err := findObsProcess()
+	if err != nil {
+		return fmt.Errorf("failed to check existing OBS process: %w", err)
+	}
+	if existingProc != nil {
+		obsProcess = existingProc
+		return nil
+	}
+
+	cmd, err := getObsCommand()
+	if err != nil {
+		return err
+	}
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start OBS: %w", err)
+	}
+
+	obsProcess = cmd.Process
+
+	go func() {
+		cmd.Wait()
+		obsProcess = nil
+	}()
+
+	return nil
+}
+
+func findObsProcess() (*os.Process, error) {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("tasklist", "/FI", "IMAGENAME eq obs64.exe", "/FO", "CSV", "/NH")
+	case "darwin":
+		cmd = exec.Command("pgrep", "-f", "OBS")
+	default:
+		cmd = exec.Command("pgrep", "-x", "obs")
+	}
+
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, nil
+	}
+
+	if len(strings.TrimSpace(string(output))) == 0 {
+		return nil, nil
+	}
+
+	switch runtime.GOOS {
+	case "windows":
+		lines := strings.Split(string(output), "\n")
+		for _, line := range lines {
+			if strings.Contains(line, "obs64.exe") {
+				fields := strings.Split(line, ",")
+				if len(fields) >= 2 {
+					pidStr := strings.Trim(strings.TrimSpace(fields[1]), `"`)
+					pid := 0
+					fmt.Sscanf(pidStr, "%d", &pid)
+					if pid > 0 {
+						return os.FindProcess(pid)
+					}
+				}
+			}
+		}
+		return nil, nil
+	default:
+		pids := strings.Fields(strings.TrimSpace(string(output)))
+		for _, pidStr := range pids {
+			pid := 0
+			fmt.Sscanf(pidStr, "%d", &pid)
+			if pid > 0 && pid != os.Getpid() {
+				return os.FindProcess(pid)
+			}
+		}
+		return nil, nil
+	}
+}
+
+func stopObsProcess() error {
+	var proc *os.Process
+
+	if obsProcess != nil {
+		proc = obsProcess
+	} else {
+		var err error
+		proc, err = findObsProcess()
+		if err != nil {
+			return fmt.Errorf("failed to find OBS process: %w", err)
+		}
+		if proc == nil {
+			return nil
+		}
+	}
+
+	if client != nil {
+		client.Stream.StopStream(&stream.StopStreamParams{})
+	}
+
+	if runtime.GOOS == "windows" {
+		if err := proc.Kill(); err != nil {
+			return fmt.Errorf("failed to kill OBS: %w", err)
+		}
+		obsProcess = nil
+		return nil
+	}
+
+	if err := proc.Signal(syscall.SIGTERM); err != nil {
+		return fmt.Errorf("failed to send SIGTERM to OBS: %w", err)
+	}
+
+	done := make(chan error, 1)
+	go func() {
+		_, err := proc.Wait()
+		done <- err
+	}()
+
+	select {
+	case <-time.After(10 * time.Second):
+		if err := proc.Kill(); err != nil {
+			return fmt.Errorf("failed to kill OBS after timeout: %w", err)
+		}
+		obsProcess = nil
+		return fmt.Errorf("OBS did not exit gracefully, force killed")
+	case <-done:
+		obsProcess = nil
+		return nil
+	}
 }
 
 func InitObsClient() (*InitObsResponse, error) {
@@ -344,14 +500,39 @@ func PostObsDataHandler(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// Register all OBS routes
+func PostStartObsAppHandler(c *gin.Context) {
+	if err := startObsProcess(); err != nil {
+		c.JSON(http.StatusInternalServerError, commonTypes.APIError{
+			Error:  "failed to start OBS",
+			Detail: err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusCreated)
+}
+
+func PostStopObsAppHandler(c *gin.Context) {
+	if err := stopObsProcess(); err != nil {
+		c.JSON(http.StatusInternalServerError, commonTypes.APIError{
+			Error:  "failed to stop OBS",
+			Detail: err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusCreated)
+}
+
 func RegisterRoutes(r gin.IRouter) {
 	obsGroup := r.Group("/obs")
 	{
 		obsGroup.GET("", GetObsStatusHandler)
 		obsGroup.POST("/init", InitObsHandler)
-		obsGroup.POST("/start", PostStartObsStreamingHandler)
-		obsGroup.POST("/stop", PostStopObsStreamingHandler)
+		obsGroup.POST("/start", PostStartObsAppHandler)
+		obsGroup.POST("/stop", PostStopObsAppHandler)
 		obsGroup.POST("/data", PostObsDataHandler)
+		obsGroup.POST("/streaming/start", PostStartObsStreamingHandler)
+		obsGroup.POST("/streaming/stop", PostStopObsStreamingHandler)
 	}
 }
