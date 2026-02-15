@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.36](https://github.com/cagelab/cogmoteGO/compare/v0.1.35...v0.1.36) (2026-02-15)
+
+
+### Bug Fixes
+
+* **ci:** :bug: use correct PowerShell parameter syntax for Windows build ([e326856](https://github.com/cagelab/cogmoteGO/commit/e326856181195e16f711d7ca383bee090564d927))
+
 ## [0.1.35](https://github.com/cagelab/cogmoteGO/compare/v0.1.34...v0.1.35) (2026-02-15)
 
 
