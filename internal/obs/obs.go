@@ -204,22 +204,24 @@ func stopObsProcess() error {
 		return fmt.Errorf("failed to send SIGTERM to OBS: %w", err)
 	}
 
-	done := make(chan error, 1)
-	go func() {
-		_, err := proc.Wait()
-		done <- err
-	}()
+	timeout := time.After(10 * time.Second)
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
 
-	select {
-	case <-time.After(10 * time.Second):
-		if err := proc.Kill(); err != nil {
-			return fmt.Errorf("failed to kill OBS after timeout: %w", err)
+	for {
+		select {
+		case <-timeout:
+			if err := proc.Kill(); err != nil {
+				return fmt.Errorf("failed to kill OBS after timeout: %w", err)
+			}
+			obsProcess = nil
+			return fmt.Errorf("OBS did not exit gracefully, force killed")
+		case <-ticker.C:
+			if err := proc.Signal(syscall.Signal(0)); err != nil {
+				obsProcess = nil
+				return nil
+			}
 		}
-		obsProcess = nil
-		return fmt.Errorf("OBS did not exit gracefully, force killed")
-	case <-done:
-		obsProcess = nil
-		return nil
 	}
 }
 

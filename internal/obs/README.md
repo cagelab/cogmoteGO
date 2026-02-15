@@ -124,4 +124,4 @@ Overlay text format: `{hostname} {monkey_name} {trial_id} {correct_rate}% {start
 - Scene and Source cannot share the same name
 - Text source is automatically positioned at the bottom of the screen (1920x1080 assumed)
 - Only supports local OBS connection (`localhost:4455`)
-- If OBS is already running, `/api/obs/app/start` will track the existing process
+- If OBS is already running, `/api/obs/start` will track the existing process
