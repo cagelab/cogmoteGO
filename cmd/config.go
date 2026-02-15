@@ -77,6 +77,32 @@ var configFields = []configField{
 		description:  "Retry interval (ms)",
 		group:        "Proxy",
 	},
+	{
+		key:          "obs.scene_name",
+		fieldType:    "string",
+		defaultValue: "cagelab",
+		validate: func(v string) error {
+			if v == "" {
+				return fmt.Errorf("scene_name cannot be empty")
+			}
+			return nil
+		},
+		description: "OBS scene name",
+		group:       "OBS",
+	},
+	{
+		key:          "obs.source_name",
+		fieldType:    "string",
+		defaultValue: "cogmoteGO",
+		validate: func(v string) error {
+			if v == "" {
+				return fmt.Errorf("source_name cannot be empty")
+			}
+			return nil
+		},
+		description: "OBS text source name",
+		group:       "OBS",
+	},
 }
 
 func findConfigField(key string) *configField {
