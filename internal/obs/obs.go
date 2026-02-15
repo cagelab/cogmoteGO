@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
-	"syscall"
 
 	"github.com/Ccccraz/cogmoteGO/internal/commonTypes"
 	"github.com/Ccccraz/cogmoteGO/internal/keyring"
@@ -106,9 +105,7 @@ func startObsProcess() error {
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setpgid: true,
-	}
+	setSysProcAttr(cmd)
 
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("failed to start OBS: %w", err)
