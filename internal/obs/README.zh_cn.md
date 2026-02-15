@@ -124,4 +124,4 @@ POST `/api/obs/data` 请求体：
 - Scene 和 Source 不能使用相同名称
 - 文本源会自动定位在画面底部 (1920x1080 假设)
 - 仅支持连接本地 OBS (`localhost:4455`)
-- 如果 OBS 已在运行，`/api/obs/app/start` 会跟踪现有进程
+- 如果 OBS 已在运行，`/api/obs/start` 会跟踪现有进程
