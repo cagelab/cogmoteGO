@@ -90,7 +90,7 @@ jobs:
         shell: pwsh
         run: |
           $shortSha = git rev-parse --short "${{ github.sha }}"
-          ${{ github.workspace }}\scripts\build.ps1 --ci --version "${{ needs.release-please.outputs.tag_name }}" --commit $shortSha
+          ${{ github.workspace }}\scripts\build.ps1 -CI -Version "${{ needs.release-please.outputs.tag_name }}" -Commit $shortSha
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
