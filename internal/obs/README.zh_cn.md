@@ -17,8 +17,11 @@ cogmoteGO 与 OBS Studio 的集成模块，用于在直播画面上叠加实验�
 ### CLI 配置
 
 ```bash
-# 交互式配置 scene、source 和密码
+# 交互式配置 scene、source 和安装方式
 cogmoteGO obs set
+
+# 设置 WebSocket 密码（存储在系统密钥环）
+cogmoteGO obs set-password
 
 # 查看当前配置状态
 cogmoteGO obs show
@@ -26,6 +29,13 @@ cogmoteGO obs show
 # 删除保存的密码
 cogmoteGO obs delete-password
 ```
+
+### 安装方式
+
+支持的安装方式：
+
+- `system`: 通过系统包管理器安装（默认）
+- `flatpak`: 通过 Flatpak 安装（`flatpak install com.obsproject.Studio`）
 
 ### Docker 环境
 
@@ -39,37 +49,45 @@ docker run -e OBS_PASSWORD=yourpassword ...
 
 ### 状态查询
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/obs` | 获取 OBS 状态 (版本、是否直播中) |
+| 方法 | 路径       | 说明                             |
+| ---- | ---------- | -------------------------------- |
+| GET  | `/api/obs` | 获取 OBS 状态 (版本、是否直播中) |
+
+### 应用控制
+
+| 方法 | 路径             | 说明              |
+| ---- | ---------------- | ----------------- |
+| POST | `/api/obs/start` | 启动 OBS 应用程序 |
+| POST | `/api/obs/stop`  | 关闭 OBS 应用程序 |
 
 ### 初始化
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
+| 方法 | 路径            | 说明                  |
+| ---- | --------------- | --------------------- |
 | POST | `/api/obs/init` | 初始化 OBS 客户端连接 |
 
 ### 直播控制
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/obs/start` | 开始直播 |
-| POST | `/api/obs/stop` | 停止直播 |
+| 方法 | 路径                       | 说明     |
+| ---- | -------------------------- | -------- |
+| POST | `/api/obs/streaming/start` | 开始直播 |
+| POST | `/api/obs/streaming/stop`  | 停止直播 |
 
 ### 数据叠加
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
+| 方法 | 路径            | 说明             |
+| ---- | --------------- | ---------------- |
 | POST | `/api/obs/data` | 更新叠加文本数据 |
 
 ## 使用流程
 
 ```
-1. 启动 OBS 并确保 WebSocket 服务器运行
+1. 调用 POST /api/obs/start 启动 OBS 应用程序
 2. 调用 POST /api/obs/init 初始化连接
-3. 调用 POST /api/obs/start 开始直播
+3. 调用 POST /api/obs/streaming/start 开始直播
 4. 调用 POST /api/obs/data 更新实验数据
-5. 调用 POST /api/obs/stop 停止直播
+5. 调用 POST /api/obs/streaming/stop 停止直播
+6. 调用 POST /api/obs/stop 关闭 OBS 应用程序
 ```
 
 ## Init 响应示例
@@ -106,3 +124,4 @@ POST `/api/obs/data` 请求体：
 - Scene 和 Source 不能使用相同名称
 - 文本源会自动定位在画面底部 (1920x1080 假设)
 - 仅支持连接本地 OBS (`localhost:4455`)
+- 如果 OBS 已在运行，`/api/obs/app/start` 会跟踪现有进程

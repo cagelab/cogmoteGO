@@ -25,8 +25,9 @@ type ProxyConfig struct {
 }
 
 type ObsConfig struct {
-	SceneName  string `mapstructure:"scene_name"`
-	SourceName string `mapstructure:"source_name"`
+	SceneName     string `mapstructure:"scene_name"`
+	SourceName    string `mapstructure:"source_name"`
+	InstallMethod string `mapstructure:"install_method"`
 }
 
 type Config struct {
@@ -56,6 +57,7 @@ func LoadConfig(cfgFile string) Config {
 
 	viper.SetDefault("obs.scene_name", "cagelab")
 	viper.SetDefault("obs.source_name", "cogmoteGO")
+	viper.SetDefault("obs.install_method", "system")
 
 	configPath := cfgFile
 
