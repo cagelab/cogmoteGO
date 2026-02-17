@@ -93,7 +93,7 @@ jobs:
           ${{ github.workspace }}\scripts\build.ps1 -CI -Version "${{ needs.release-please.outputs.tag_name }}" -Commit $shortSha
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: release-asset-${{ matrix.target }}
           path: dist/
@@ -106,7 +106,7 @@ jobs:
       contents: write
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: dist/
           merge-multiple: true
