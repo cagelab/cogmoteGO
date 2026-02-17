@@ -2,6 +2,20 @@
 
 cogmoteGO change log.
 
+## [0.1.38](https://github.com/cagelab/cogmoteGO/compare/v0.1.37...v0.1.38) (2026-02-17)
+
+
+### Bug Fixes
+
+* **deps:** ⬆️ update module github.com/andreykaipov/goobs to v1.7.1 ([#191](https://github.com/cagelab/cogmoteGO/issues/191)) ([9c1ff54](https://github.com/cagelab/cogmoteGO/commit/9c1ff54833991c36123347a5b7beb33fe284bd0e))
+* **deps:** ⬆️ update module github.com/gin-contrib/cors to v1.7.6 ([#187](https://github.com/cagelab/cogmoteGO/issues/187)) ([dd8760f](https://github.com/cagelab/cogmoteGO/commit/dd8760faf3dc943df115801503306fcf6be6b773))
+* **deps:** ⬆️ update module github.com/gin-gonic/gin to v1.11.0 ([#192](https://github.com/cagelab/cogmoteGO/issues/192)) ([12e8f68](https://github.com/cagelab/cogmoteGO/commit/12e8f683f68909223b8a6aee0c20387200b10752))
+* **deps:** ⬆️ update module github.com/kardianos/service to v1.2.4 ([#188](https://github.com/cagelab/cogmoteGO/issues/188)) ([7bcbf24](https://github.com/cagelab/cogmoteGO/commit/7bcbf240e6afc60d7916d6d8d5691aa1b39a0d97))
+* **deps:** ⬆️ update module github.com/pebbe/zmq4 to v1.4.0 ([#193](https://github.com/cagelab/cogmoteGO/issues/193)) ([f73ab23](https://github.com/cagelab/cogmoteGO/commit/f73ab236342cd04262da8c1587de5e944312959b))
+* **deps:** ⬆️ update module github.com/shirou/gopsutil/v4 to v4.26.1 ([#194](https://github.com/cagelab/cogmoteGO/issues/194)) ([02c6061](https://github.com/cagelab/cogmoteGO/commit/02c606199d2c48d6c214b4b02c2afc44d58656b4))
+* **deps:** ⬆️ update module github.com/spf13/cobra to v1.10.2 ([#197](https://github.com/cagelab/cogmoteGO/issues/197)) ([d5da365](https://github.com/cagelab/cogmoteGO/commit/d5da3657e6533be3a0a42dcf0165f9bc67c63cea))
+* **deps:** ⬆️ update module golang.org/x/term to v0.40.0 ([#199](https://github.com/cagelab/cogmoteGO/issues/199)) ([3c9b67b](https://github.com/cagelab/cogmoteGO/commit/3c9b67bb46c5f0e2123e7d80369957982d89f747))
+
 ## [0.1.37](https://github.com/cagelab/cogmoteGO/compare/v0.1.36...v0.1.37) (2026-02-15)
 
 
