@@ -13,7 +13,7 @@ require (
 	github.com/kardianos/service v1.2.4
 	github.com/pebbe/zmq4 v1.3.0
 	github.com/shirou/gopsutil/v4 v4.25.3
-	github.com/spf13/cobra v1.9.1
+	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
 	github.com/wneessen/go-mail v0.7.2
 	github.com/zalando/go-keyring v0.2.6
