@@ -23,7 +23,7 @@ RUN ./scripts/build.sh \
 
 
 #runtime stage
-FROM debian:bookworm-slim@sha256:90522eeb7e5923ee2b871c639059537b30521272f10ca86fdbbbb2b75a8c40cd AS build-release-stage
+FROM debian:bookworm-slim@sha256:98f4b71de414932439ac6ac690d7060df1f27161073c5036a7553723881bffbe AS build-release-stage
 
 RUN apt-get update && apt-get install -y \
     libzmq5 \
