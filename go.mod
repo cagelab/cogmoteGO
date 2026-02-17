@@ -5,7 +5,7 @@ go 1.24.4
 require (
 	github.com/TylerBrock/colorjson v0.0.0-20200706003622-8a50f05110d2
 	github.com/adrg/xdg v0.5.3
-	github.com/andreykaipov/goobs v1.5.6
+	github.com/andreykaipov/goobs v1.7.1
 	github.com/fatih/color v1.18.0
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.10.1
