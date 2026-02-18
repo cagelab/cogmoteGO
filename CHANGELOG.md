@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.39](https://github.com/cagelab/cogmoteGO/compare/v0.1.38...v0.1.39) (2026-02-18)
+
+
+### Features
+
+* **email:** ✨ add support for embedded images in emails ([b24b168](https://github.com/cagelab/cogmoteGO/commit/b24b168532359cd48978097d248db91fb8e30369))
+
 ## [0.1.38](https://github.com/cagelab/cogmoteGO/compare/v0.1.37...v0.1.38) (2026-02-17)
 
 
