@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"crypto/tls"
 	"log/slog"
 	"net/http"
 	"os"
@@ -306,12 +307,18 @@ func buildEmailMessage(c *gin.Context, cfg emailConfig, payload emailPayload) (*
 }
 
 func deliverEmail(c *gin.Context, cfg emailConfig, message *mail.Msg) bool {
+	tlsConfig := &tls.Config{
+		ServerName: cfg.Host,
+	}
+
 	client, err := mail.NewClient(
 		cfg.Host,
 		mail.WithPort(cfg.Port),
 		mail.WithSMTPAuth(mail.SMTPAuthAutoDiscover),
 		mail.WithUsername(cfg.From),
 		mail.WithPassword(cfg.Password),
+		mail.WithTLSConfig(tlsConfig),
+		mail.WithTLSPolicy(mail.TLSOpportunistic),
 	)
 	if err != nil {
 		logger.Logger.Error("failed to send email",
