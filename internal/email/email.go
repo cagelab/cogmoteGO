@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"crypto/tls"
 	"log/slog"
 	"net/http"
 	"os"
@@ -20,11 +21,19 @@ type emailPayload struct {
 	Subject     string            `json:"subject"`
 	HTMLBody    string            `json:"html_body"`
 	Attachments []emailAttachment `json:"attachments"`
+	Embeds      []emailEmbed      `json:"embeds"`
+	InReplyTo   string            `json:"in_reply_to"`
 }
 
 type emailAttachment struct {
 	Filename string `json:"filename"`
 	Content  []byte `json:"content"`
+}
+
+type emailEmbed struct {
+	ContentID string `json:"content_id"`
+	Filename  string `json:"filename"`
+	Content   []byte `json:"content"`
 }
 
 type emailConfig struct {
@@ -57,7 +66,7 @@ func PostEmailHandler(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusCreated)
+	c.JSON(http.StatusCreated, gin.H{"message_id": message.GetMessageID()})
 }
 
 func parseEmailPayload(c *gin.Context) (emailPayload, bool) {
@@ -105,6 +114,41 @@ func parseEmailPayload(c *gin.Context) (emailPayload, bool) {
 				),
 			)
 			respondError(c, http.StatusBadRequest, "attachment content cannot be empty", "")
+			return emailPayload{}, false
+		}
+	}
+
+	for idx := range payload.Embeds {
+		payload.Embeds[idx].ContentID = strings.TrimSpace(payload.Embeds[idx].ContentID)
+		payload.Embeds[idx].Filename = strings.TrimSpace(payload.Embeds[idx].Filename)
+
+		if payload.Embeds[idx].ContentID == "" {
+			logger.Logger.Error("embed content_id cannot be empty",
+				slog.Group(logKey,
+					slog.Int("index", idx),
+				),
+			)
+			respondError(c, http.StatusBadRequest, "embed content_id cannot be empty", "")
+			return emailPayload{}, false
+		}
+		if payload.Embeds[idx].Filename == "" {
+			logger.Logger.Error("embed filename cannot be empty",
+				slog.Group(logKey,
+					slog.Int("index", idx),
+					slog.String("content_id", payload.Embeds[idx].ContentID),
+				),
+			)
+			respondError(c, http.StatusBadRequest, "embed filename cannot be empty", "")
+			return emailPayload{}, false
+		}
+		if len(payload.Embeds[idx].Content) == 0 {
+			logger.Logger.Error("embed content cannot be empty",
+				slog.Group(logKey,
+					slog.String("content_id", payload.Embeds[idx].ContentID),
+					slog.String("filename", payload.Embeds[idx].Filename),
+				),
+			)
+			respondError(c, http.StatusBadRequest, "embed content cannot be empty", "")
 			return emailPayload{}, false
 		}
 	}
@@ -226,6 +270,10 @@ func buildEmailMessage(c *gin.Context, cfg emailConfig, payload emailPayload) (*
 
 	message.Subject(payload.Subject)
 
+	if payload.InReplyTo != "" {
+		message.SetGenHeader(mail.HeaderInReplyTo, payload.InReplyTo)
+	}
+
 	message.SetBodyString(mail.TypeTextHTML, payload.HTMLBody)
 
 	for _, attachment := range payload.Attachments {
@@ -241,16 +289,36 @@ func buildEmailMessage(c *gin.Context, cfg emailConfig, payload emailPayload) (*
 		}
 	}
 
+	for _, embed := range payload.Embeds {
+		if err := message.EmbedReader(embed.Filename, bytes.NewReader(embed.Content), mail.WithFileContentID(embed.ContentID)); err != nil {
+			logger.Logger.Error("invalid embed",
+				slog.Group(logKey,
+					slog.String("detail", err.Error()),
+					slog.String("content_id", embed.ContentID),
+					slog.String("filename", embed.Filename),
+				),
+			)
+			respondError(c, http.StatusBadRequest, "invalid embed", err.Error())
+			return nil, false
+		}
+	}
+
 	return message, true
 }
 
 func deliverEmail(c *gin.Context, cfg emailConfig, message *mail.Msg) bool {
+	tlsConfig := &tls.Config{
+		ServerName: cfg.Host,
+	}
+
 	client, err := mail.NewClient(
 		cfg.Host,
 		mail.WithPort(cfg.Port),
 		mail.WithSMTPAuth(mail.SMTPAuthAutoDiscover),
 		mail.WithUsername(cfg.From),
 		mail.WithPassword(cfg.Password),
+		mail.WithTLSConfig(tlsConfig),
+		mail.WithTLSPolicy(mail.TLSOpportunistic),
 	)
 	if err != nil {
 		logger.Logger.Error("failed to send email",
@@ -414,7 +482,10 @@ func PostTestEmailHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "test email sent successfully"})
+	c.JSON(http.StatusOK, gin.H{
+		"message":    "test email sent successfully",
+		"message_id": message.GetMessageID(),
+	})
 }
 
 func RegisterRoutes(r gin.IRouter) {
