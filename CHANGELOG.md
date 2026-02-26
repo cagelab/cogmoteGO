@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.40](https://github.com/cagelab/cogmoteGO/compare/v0.1.39...v0.1.40) (2026-02-26)
+
+
+### Bug Fixes
+
+* **deps:** ⬆️ update module github.com/andreykaipov/goobs to v1.8.0 ([#207](https://github.com/cagelab/cogmoteGO/issues/207)) ([5794907](https://github.com/cagelab/cogmoteGO/commit/5794907fc839a985c992a344913e768458f0ddb2))
+
 ## [0.1.39](https://github.com/cagelab/cogmoteGO/compare/v0.1.38...v0.1.39) (2026-02-18)
 
 
