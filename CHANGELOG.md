@@ -2,6 +2,13 @@
 
 cogmoteGO change log.
 
+## [0.1.41](https://github.com/cagelab/cogmoteGO/compare/v0.1.40...v0.1.41) (2026-02-28)
+
+
+### Bug Fixes
+
+* **deps:** ⬆️ update module github.com/gin-gonic/gin to v1.12.0 ([#210](https://github.com/cagelab/cogmoteGO/issues/210)) ([fbef17a](https://github.com/cagelab/cogmoteGO/commit/fbef17aebf6d149a34808895e7a453a4b9e73655))
+
 ## [0.1.40](https://github.com/cagelab/cogmoteGO/compare/v0.1.39...v0.1.40) (2026-02-26)
 
 
