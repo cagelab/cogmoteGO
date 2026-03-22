@@ -2,6 +2,15 @@
 
 cogmoteGO change log.
 
+## [0.1.44](https://github.com/cagelab/cogmoteGO/compare/v0.1.43...v0.1.44) (2026-03-22)
+
+
+### Bug Fixes
+
+* **deps:** ⬆️ update module github.com/fatih/color to v1.19.0 ([#224](https://github.com/cagelab/cogmoteGO/issues/224)) ([949e2ec](https://github.com/cagelab/cogmoteGO/commit/949e2ec3b3f4c479f9ae65c3f6e140d7180e651d))
+* **deps:** ⬆️ update module github.com/zalando/go-keyring to v0.2.7 ([#225](https://github.com/cagelab/cogmoteGO/issues/225)) ([91ad88b](https://github.com/cagelab/cogmoteGO/commit/91ad88b2ed08d7c28877ef784d9e7da81b80f183))
+* **deps:** ⬆️ update module golang.org/x/term to v0.41.0 ([#221](https://github.com/cagelab/cogmoteGO/issues/221)) ([a0fea1e](https://github.com/cagelab/cogmoteGO/commit/a0fea1eaee3c89b09f8307c9a102ffbabd4c326c))
+
 ## [0.1.43](https://github.com/cagelab/cogmoteGO/compare/v0.1.42...v0.1.43) (2026-03-04)
 
 
