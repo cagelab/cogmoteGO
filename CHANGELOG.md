@@ -2,6 +2,18 @@
 
 cogmoteGO change log.
 
+## [0.1.45](https://github.com/cagelab/cogmoteGO/compare/v0.1.44...v0.1.45) (2026-05-03)
+
+
+### Bug Fixes
+
+* **deps:** ⬆️ update module github.com/andreykaipov/goobs to v1.8.3 ([#230](https://github.com/cagelab/cogmoteGO/issues/230)) ([350d07f](https://github.com/cagelab/cogmoteGO/commit/350d07fedc1ddcfe64890a7c0ddcf8bf435bafa9))
+* **deps:** ⬆️ update module github.com/gin-contrib/cors to v1.7.7 ([#228](https://github.com/cagelab/cogmoteGO/issues/228)) ([4f194c4](https://github.com/cagelab/cogmoteGO/commit/4f194c4421c04ae3c0e5f3eb926f29b6f8eff745))
+* **deps:** ⬆️ update module github.com/shirou/gopsutil/v4 to v4.26.3 ([#229](https://github.com/cagelab/cogmoteGO/issues/229)) ([578fa95](https://github.com/cagelab/cogmoteGO/commit/578fa958443f11706f0d4c122984912526d623de))
+* **deps:** ⬆️ update module github.com/shirou/gopsutil/v4 to v4.26.4 ([#241](https://github.com/cagelab/cogmoteGO/issues/241)) ([5dd2fa9](https://github.com/cagelab/cogmoteGO/commit/5dd2fa9fb271b2340d1ff6ceeec5c4cc032cd796))
+* **deps:** ⬆️ update module github.com/zalando/go-keyring to v0.2.8 ([#226](https://github.com/cagelab/cogmoteGO/issues/226)) ([c9a459d](https://github.com/cagelab/cogmoteGO/commit/c9a459d740d4176d96342c1c95b19b440d8fb44b))
+* **deps:** ⬆️ update module golang.org/x/term to v0.42.0 ([#234](https://github.com/cagelab/cogmoteGO/issues/234)) ([41a2f69](https://github.com/cagelab/cogmoteGO/commit/41a2f69f30f510269293de393455f158a788b397))
+
 ## [0.1.44](https://github.com/cagelab/cogmoteGO/compare/v0.1.43...v0.1.44) (2026-03-22)
 
 
