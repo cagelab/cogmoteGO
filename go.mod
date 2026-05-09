@@ -17,7 +17,7 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/wneessen/go-mail v0.7.2
 	github.com/zalando/go-keyring v0.2.8
-	golang.org/x/term v0.42.0
+	golang.org/x/term v0.43.0
 )
 
 replace github.com/kardianos/service => github.com/Ccccraz/service v0.0.0-20250723092950-bd0a34a32974
@@ -82,7 +82,7 @@ require (
 	golang.org/x/mod v0.33.0 // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
 	golang.org/x/tools v0.42.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
