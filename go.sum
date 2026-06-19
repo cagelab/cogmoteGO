@@ -18,8 +18,12 @@ github.com/andreykaipov/goobs v1.8.2 h1:jOWjFdSOZ5R4b6U+/30k4OhkqaN847gzHX4IKFsa
 github.com/andreykaipov/goobs v1.8.2/go.mod h1:4Dl/G+rQXCywV85hdAKwsj8h352KsfILP+QUB1FvRSc=
 github.com/andreykaipov/goobs v1.8.3 h1:G/WWpXY0EHO4JJPEunifq7/JRCMmVrPRfF1yHV1MoH0=
 github.com/andreykaipov/goobs v1.8.3/go.mod h1:4Dl/G+rQXCywV85hdAKwsj8h352KsfILP+QUB1FvRSc=
+github.com/andreykaipov/goobs v1.9.0 h1:UdW/vKq/i/MecARruHMDIGxLmZvMlF1THuCpvYE3+A4=
+github.com/andreykaipov/goobs v1.9.0/go.mod h1:bvf1OtZfuiUUMNcBFVH46RPnuom5zwTr4f/9bNV76xM=
 github.com/buger/jsonparser v1.1.1 h1:2PnMjfWD7wBILjqQbt530v576A/cAbQvEW9gGIpYMUs=
 github.com/buger/jsonparser v1.1.1/go.mod h1:6RYKKt7H4d4+iWqouImQ9R2FZql3VbhNgx27UK13J/0=
+github.com/buger/jsonparser v1.2.0 h1:4EFcvK1kD4jyj6YqNK6skK6w+y7FHHBR+XBCtxwu/6g=
+github.com/buger/jsonparser v1.2.0/go.mod h1:6RYKKt7H4d4+iWqouImQ9R2FZql3VbhNgx27UK13J/0=
 github.com/bytedance/gopkg v0.1.3 h1:TPBSwH8RsouGCBcMBktLt1AymVo2TVsBVCY4b6TnZ/M=
 github.com/bytedance/gopkg v0.1.3/go.mod h1:576VvJ+eJgyCzdjS+c4+77QF3p7ubbtiKARP3TxducM=
 github.com/bytedance/sonic v1.13.2 h1:8/H1FempDZqC4VqjptGo14QQlJx8VdZJegxs6wwfqpQ=
