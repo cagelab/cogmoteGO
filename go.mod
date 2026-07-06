@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/TylerBrock/colorjson v0.0.0-20200706003622-8a50f05110d2
 	github.com/adrg/xdg v0.5.3
-	github.com/andreykaipov/goobs v1.8.3
+	github.com/andreykaipov/goobs v1.9.0
 	github.com/fatih/color v1.19.0
 	github.com/gin-contrib/cors v1.7.7
 	github.com/gin-gonic/gin v1.12.0
@@ -24,7 +24,7 @@ replace github.com/kardianos/service => github.com/Ccccraz/service v0.0.0-202507
 
 require (
 	al.essio.dev/pkg/shellescape v1.5.1 // indirect
-	github.com/buger/jsonparser v1.1.1 // indirect
+	github.com/buger/jsonparser v1.2.0 // indirect
 	github.com/bytedance/gopkg v0.1.3 // indirect
 	github.com/bytedance/sonic v1.15.0 // indirect
 	github.com/bytedance/sonic/loader v0.5.0 // indirect
