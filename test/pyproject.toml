@@ -11,8 +11,3 @@ dependencies = [
     "requests>=2.32.3",
     "sseclient>=0.0.27",
 ]
-
-[tool.uv.workspace]
-members = [
-    "backup",
-]
