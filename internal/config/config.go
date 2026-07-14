@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
@@ -30,12 +31,29 @@ type ObsConfig struct {
 	InstallMethod string `mapstructure:"install_method"`
 }
 
+type BackupConfig struct {
+	SourceRoots []BackupRoot `mapstructure:"source_roots"`
+	SambaRoots  []BackupRoot `mapstructure:"samba_roots"`
+}
+
+type BackupRoot struct {
+	ID   string `mapstructure:"id" json:"id"`
+	Path string `mapstructure:"path" json:"path"`
+}
+
+var backupRootIDPattern = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
+
+func IsValidBackupRootID(id string) bool {
+	return backupRootIDPattern.MatchString(id)
+}
+
 type Config struct {
-	Port       int         `mapstructure:"port"`
-	InstanceID string      `mapstructure:"instance_id"`
-	Email      EmailConfig `mapstructure:"email"`
-	Proxy      ProxyConfig `mapstructure:"proxy"`
-	Obs        ObsConfig   `mapstructure:"obs"`
+	Port       int          `mapstructure:"port"`
+	InstanceID string       `mapstructure:"instance_id"`
+	Email      EmailConfig  `mapstructure:"email"`
+	Proxy      ProxyConfig  `mapstructure:"proxy"`
+	Obs        ObsConfig    `mapstructure:"obs"`
+	Backup     BackupConfig `mapstructure:"backup"`
 }
 
 func LoadConfig(cfgFile string) Config {
@@ -58,6 +76,9 @@ func LoadConfig(cfgFile string) Config {
 	viper.SetDefault("obs.scene_name", "cagelab")
 	viper.SetDefault("obs.source_name", "cogmoteGO")
 	viper.SetDefault("obs.install_method", "system")
+
+	viper.SetDefault("backup.source_roots", []BackupRoot{})
+	viper.SetDefault("backup.samba_roots", []BackupRoot{})
 
 	configPath := cfgFile
 

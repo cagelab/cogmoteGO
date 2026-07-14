@@ -8,6 +8,7 @@ import (
 	"runtime"
 
 	alive "github.com/Ccccraz/cogmoteGO/internal"
+	"github.com/Ccccraz/cogmoteGO/internal/backup"
 	"github.com/Ccccraz/cogmoteGO/internal/broadcast"
 	cmdproxy "github.com/Ccccraz/cogmoteGO/internal/cmdProxy"
 	"github.com/Ccccraz/cogmoteGO/internal/device"
@@ -136,7 +137,6 @@ func Serve() {
 
 	logger.Init(dev)
 	experiments.Init()
-
 	r := gin.New()
 	if dev {
 		r.Use(gin.Logger())
@@ -166,6 +166,10 @@ func Serve() {
 	device.RegisterRoutes(api)
 	obs.RegisterRoutes(api)
 	email.RegisterRoutes(api)
+	if err := backup.RegisterRoutes(api, Config.Backup.SourceRoots, Config.Backup.SambaRoots); err != nil {
+		logger.Logger.Error("failed to register backup routes", "error", err)
+		return
+	}
 
 	addr := fmt.Sprintf(":%d", Config.Port)
 	err := r.Run(addr)
