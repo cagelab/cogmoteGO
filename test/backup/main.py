@@ -21,6 +21,9 @@ SOURCE_ROOT_ID = "backup-test-source"
 SAMBA_ROOT_ID = "backup-test-samba"
 DESTINATION_PATH = "manual-tests"
 POLL_INTERVAL_SECONDS = 0.5
+LARGE_FILE_COUNT = 5
+LARGE_FILE_SIZE = 1_000_000_000
+WRITE_CHUNK_SIZE = 8 * 1024 * 1024
 
 SCRIPT_DIRECTORY = Path(__file__).parent
 GENERATED_DIRECTORY = SCRIPT_DIRECTORY / "generated"
@@ -46,6 +49,18 @@ def write_csv(path: Path) -> None:
             writer.writerow([sample, random.random(), random.random()])
 
 
+def write_large_files(directory: Path) -> None:
+    for index in range(1, LARGE_FILE_COUNT + 1):
+        path = directory / f"payload-{index:02d}.bin"
+        print(f"creating {path.name} ({LARGE_FILE_SIZE:,} bytes)")
+        remaining = LARGE_FILE_SIZE
+        with path.open("wb") as file:
+            while remaining > 0:
+                chunk_size = min(WRITE_CHUNK_SIZE, remaining)
+                file.write(os.urandom(chunk_size))
+                remaining -= chunk_size
+
+
 def create_data() -> Path:
     run_name = datetime.now(UTC).strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:8]
     directory = GENERATED_DIRECTORY / run_name
@@ -69,7 +84,7 @@ def create_data() -> Path:
         encoding="utf-8",
     )
     (directory / "notes.txt").write_text("Manual backup test data.\n", encoding="utf-8")
-    (realdata / "payload.bin").write_bytes(os.urandom(1024 * 1024))
+    write_large_files(realdata)
     return directory
 
 
