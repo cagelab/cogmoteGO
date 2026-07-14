@@ -33,6 +33,14 @@ var configFields = []configField{
 		group:        "Server",
 	},
 	{
+		key:          "internal_port",
+		fieldType:    "int",
+		defaultValue: 9011,
+		validate:     validatePort,
+		description:  "Internal API listening port",
+		group:        "Server",
+	},
+	{
 		key:          "instance_id",
 		fieldType:    "string",
 		defaultValue: "",
