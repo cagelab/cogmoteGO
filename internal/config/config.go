@@ -48,12 +48,13 @@ func IsValidBackupRootID(id string) bool {
 }
 
 type Config struct {
-	Port       int          `mapstructure:"port"`
-	InstanceID string       `mapstructure:"instance_id"`
-	Email      EmailConfig  `mapstructure:"email"`
-	Proxy      ProxyConfig  `mapstructure:"proxy"`
-	Obs        ObsConfig    `mapstructure:"obs"`
-	Backup     BackupConfig `mapstructure:"backup"`
+	Port         int          `mapstructure:"port"`
+	InternalPort int          `mapstructure:"internal_port"`
+	InstanceID   string       `mapstructure:"instance_id"`
+	Email        EmailConfig  `mapstructure:"email"`
+	Proxy        ProxyConfig  `mapstructure:"proxy"`
+	Obs          ObsConfig    `mapstructure:"obs"`
+	Backup       BackupConfig `mapstructure:"backup"`
 }
 
 func LoadConfig(cfgFile string) Config {
@@ -65,6 +66,7 @@ func LoadConfig(cfgFile string) Config {
 	viper.SetDefault("email.recipients", []string{})
 
 	viper.SetDefault("port", 9012)
+	viper.SetDefault("internal_port", 9011)
 
 	viper.SetDefault("instance_id", "")
 

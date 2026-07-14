@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"log/slog"
+	"net"
 	"os"
 	"os/user"
 	"runtime"
@@ -137,6 +137,62 @@ func Serve() {
 
 	logger.Init(dev)
 	experiments.Init()
+	publicRouter := newRouter(dev)
+	api := publicRouter.Group("/api")
+
+	broadcast.RegisterRoutes(api)
+	cmdproxy.RegisterRoutes(api, Config)
+	health.RegisterRoutes(api)
+	alive.RegisterRoutes(api)
+	experiments.RegisterRoutes(api)
+	status.RegisterRoutes(api)
+	device.SetVersion(version, commit, datetime)
+	device.SetInstanceID(Config.InstanceID)
+	device.RegisterRoutes(api)
+	obs.RegisterRoutes(api)
+	email.RegisterRoutes(api)
+
+	internalRouter := newRouter(dev)
+	internalAPI := internalRouter.Group("/api")
+	if err := backup.RegisterRoutes(internalAPI, Config.Backup.SourceRoots, Config.Backup.SambaRoots); err != nil {
+		logger.Logger.Error("failed to register backup routes", "error", err)
+		os.Exit(1)
+	}
+
+	if Config.Port == Config.InternalPort {
+		logger.Logger.Error("public and internal API ports must be different", "port", Config.Port)
+		os.Exit(1)
+	}
+	publicAddress := fmt.Sprintf(":%d", Config.Port)
+	internalAddress := fmt.Sprintf("127.0.0.1:%d", Config.InternalPort)
+	publicListener, err := net.Listen("tcp", publicAddress)
+	if err != nil {
+		logger.Logger.Error("failed to listen for public API", "address", publicAddress, "error", err)
+		os.Exit(1)
+	}
+	internalListener, err := net.Listen("tcp", internalAddress)
+	if err != nil {
+		publicListener.Close()
+		logger.Logger.Error("failed to listen for internal API", "address", internalAddress, "error", err)
+		os.Exit(1)
+	}
+
+	serverErrors := make(chan error, 2)
+	go func() {
+		serverErrors <- fmt.Errorf("public API server stopped: %w", publicRouter.RunListener(publicListener))
+	}()
+	go func() {
+		serverErrors <- fmt.Errorf("internal API server stopped: %w", internalRouter.RunListener(internalListener))
+	}()
+
+	err = <-serverErrors
+	publicListener.Close()
+	internalListener.Close()
+	logger.Logger.Error("failed to serve cogmoteGO", "error", err)
+	os.Exit(1)
+}
+
+func newRouter(dev bool) *gin.Engine {
 	r := gin.New()
 	if dev {
 		r.Use(gin.Logger())
@@ -152,33 +208,5 @@ func Serve() {
 		return origin == "http://localhost:1420" || origin == "http://localhost:5173" || origin == "tauri://localhost" || origin == "http://tauri.localhost"
 	}
 	r.Use(cors.New(corsConfig))
-
-	api := r.Group("/api")
-
-	broadcast.RegisterRoutes(api)
-	cmdproxy.RegisterRoutes(api, Config)
-	health.RegisterRoutes(api)
-	alive.RegisterRoutes(api)
-	experiments.RegisterRoutes(api)
-	status.RegisterRoutes(api)
-	device.SetVersion(version, commit, datetime)
-	device.SetInstanceID(Config.InstanceID)
-	device.RegisterRoutes(api)
-	obs.RegisterRoutes(api)
-	email.RegisterRoutes(api)
-	if err := backup.RegisterRoutes(api, Config.Backup.SourceRoots, Config.Backup.SambaRoots); err != nil {
-		logger.Logger.Error("failed to register backup routes", "error", err)
-		return
-	}
-
-	addr := fmt.Sprintf(":%d", Config.Port)
-	err := r.Run(addr)
-	if err != nil {
-		logger.Logger.Error("failed to start server", "port", Config.Port, "error", err)
-		logger.Logger.Error("failed to start cogmoteGO: ",
-			slog.Int("port", Config.Port),
-			slog.String("error", err.Error()),
-		)
-		os.Exit(1)
-	}
+	return r
 }
