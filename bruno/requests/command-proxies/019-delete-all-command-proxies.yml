@@ -1,0 +1,19 @@
+info:
+  name: Delete all command proxies
+  type: http
+  seq: 19
+  tags:
+    - manual
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/cmds/proxies"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Closes and removes all active command proxies.

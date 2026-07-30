@@ -1,0 +1,19 @@
+info:
+  name: Start OBS application
+  type: http
+  seq: 38
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/obs/start"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Starts or attaches to the local OBS application.

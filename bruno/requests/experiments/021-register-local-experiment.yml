@@ -1,0 +1,43 @@
+info:
+  name: Register local experiment
+  type: http
+  seq: 21
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/exps"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "nickname": "bruno-local-experiment",
+        "type": "local",
+        "address": null,
+        "data_path": null,
+        "execs": [
+          {
+            "nickname": "default",
+            "exec": "echo cogmoteGO"
+          }
+        ]
+      }
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.status === 201) { bru.setVar("experimentId", res.body.id); }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Registers a local experiment. On success, stores its generated ID as experimentId.

@@ -1,0 +1,19 @@
+info:
+  name: Stop OBS streaming
+  type: http
+  seq: 42
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/obs/streaming/stop"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Stops streaming through the initialized OBS client.

@@ -1,0 +1,20 @@
+info:
+  name: Get current backup task
+  type: http
+  seq: 50
+  tags:
+    - internal
+    - manual
+
+http:
+  method: GET
+  url: "{{internalBaseUrl}}/backups"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Returns the latest in-memory backup task. Internal listener only; 404 before any task exists.

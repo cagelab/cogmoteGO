@@ -1,0 +1,26 @@
+info:
+  name: Switch Git experiment branch
+  type: http
+  seq: 28
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/exps/:id/git/:branch"
+  params:
+    - name: id
+      value: "{{experimentId}}"
+      type: path
+    - name: branch
+      value: "{{gitBranch}}"
+      type: path
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Switches an initialized Git experiment to gitBranch.

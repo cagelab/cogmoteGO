@@ -1,0 +1,32 @@
+info:
+  name: Send command through proxy
+  type: http
+  seq: 17
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/cmds/proxies/:nickname"
+  params:
+    - name: nickname
+      value: "{{proxyNickname}}"
+      type: path
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "command": "status"
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Sends an arbitrary raw command payload through an active ZeroMQ proxy and returns the worker response.

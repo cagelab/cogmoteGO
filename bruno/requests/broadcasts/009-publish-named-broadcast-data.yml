@@ -1,0 +1,39 @@
+info:
+  name: Publish named broadcast data
+  type: http
+  seq: 9
+  tags:
+    - regression
+
+http:
+  method: POST
+  url: "{{baseUrl}}/broadcast/data/:name"
+  params:
+    - name: name
+      value: "{{broadcastName}}"
+      type: path
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "event": "trial.updated",
+        "trial_id": 42
+      }
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200 or missing endpoint", () => expect([200, 404]).to.include(res.status));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Publishes an arbitrary raw payload to a named endpoint. Create it first.

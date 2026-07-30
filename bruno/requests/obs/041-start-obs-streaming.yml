@@ -1,0 +1,19 @@
+info:
+  name: Start OBS streaming
+  type: http
+  seq: 41
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/obs/streaming/start"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Starts streaming through the initialized OBS client.

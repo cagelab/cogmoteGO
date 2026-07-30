@@ -1,0 +1,25 @@
+info:
+  name: Get health
+  type: http
+  seq: 1
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/health"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Checks service health. No authentication. Returns status and host information.

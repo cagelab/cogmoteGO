@@ -1,0 +1,34 @@
+info:
+  name: Create broadcast endpoint
+  type: http
+  seq: 5
+  tags:
+    - regression
+
+http:
+  method: POST
+  url: "{{baseUrl}}/broadcast/data"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "name": "bruno-stream"
+      }
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 201 or already exists", () => expect([201, 409]).to.include(res.status));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Creates an in-memory broadcast endpoint. The name must be unique.

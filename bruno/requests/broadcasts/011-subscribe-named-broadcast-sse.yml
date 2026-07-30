@@ -1,0 +1,24 @@
+info:
+  name: Subscribe named broadcast SSE
+  type: http
+  seq: 11
+  tags:
+    - manual
+    - sse
+
+http:
+  method: GET
+  url: "{{baseUrl}}/broadcast/data/:name"
+  params:
+    - name: name
+      value: "{{broadcastName}}"
+      type: path
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Opens a Server-Sent Events stream for a named endpoint. Manual request: it remains open until cancelled.

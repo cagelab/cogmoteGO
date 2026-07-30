@@ -1,0 +1,23 @@
+info:
+  name: Get experiment data file
+  type: http
+  seq: 34
+  tags:
+    - manual
+
+http:
+  method: GET
+  url: "{{baseUrl}}/data/:filepath"
+  params:
+    - name: filepath
+      value: "{{dataFilepath}}"
+      type: path
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Reads a file exposed from registered experiment data directories. filepath may contain path segments.

@@ -1,0 +1,19 @@
+info:
+  name: Stop OBS application
+  type: http
+  seq: 39
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/obs/stop"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Stops the tracked local OBS process.

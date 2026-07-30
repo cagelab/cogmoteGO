@@ -1,0 +1,25 @@
+info:
+  name: List command proxies
+  type: http
+  seq: 15
+  tags:
+    - regression
+
+http:
+  method: GET
+  url: "{{baseUrl}}/cmds/proxies"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns proxies or none", () => expect([200, 404]).to.include(res.status));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Lists active ZeroMQ REQ command proxies.

@@ -1,0 +1,39 @@
+info:
+  name: Create backup task
+  type: http
+  seq: 51
+  tags:
+    - internal
+    - manual
+
+http:
+  method: POST
+  url: "{{internalBaseUrl}}/backups"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "source": {
+          "root_id": "{{backupSourceRootId}}",
+          "entries": [
+            "{{backupEntry}}"
+          ]
+        },
+        "destination": {
+          "type": "samba",
+          "root_id": "{{backupDestinationRootId}}",
+          "path": "{{backupDestinationPath}}"
+        }
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Creates an asynchronous backup task on the loopback-only internal API. Root IDs must already be configured; existing destination entries are not overwritten.

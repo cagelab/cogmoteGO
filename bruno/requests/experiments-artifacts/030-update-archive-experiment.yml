@@ -1,0 +1,31 @@
+info:
+  name: Update archive experiment
+  type: http
+  seq: 30
+  tags:
+    - manual
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/exps/:id/artifacts"
+  params:
+    - name: id
+      value: "{{experimentId}}"
+      type: path
+  body:
+    type: multipart-form
+    data:
+      - name: file
+        value: "{{archiveFile}}"
+        type: file
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Uploads a ZIP in multipart field file and replaces an archive experiment.
+
+  Set archiveFile to a local ZIP path or select the file in Bruno before sending.

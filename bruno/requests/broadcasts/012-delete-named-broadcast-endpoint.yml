@@ -1,0 +1,29 @@
+info:
+  name: Delete named broadcast endpoint
+  type: http
+  seq: 12
+  tags:
+    - regression
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/broadcast/data/:name"
+  params:
+    - name: name
+      value: "{{broadcastName}}"
+      type: path
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200 or not found", () => expect([200, 404]).to.include(res.status));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Deletes a named in-memory broadcast endpoint and its history.

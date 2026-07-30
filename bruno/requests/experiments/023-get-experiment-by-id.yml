@@ -1,0 +1,29 @@
+info:
+  name: Get experiment by ID
+  type: http
+  seq: 23
+  tags:
+    - regression
+
+http:
+  method: GET
+  url: "{{baseUrl}}/exps/:id"
+  params:
+    - name: id
+      value: "{{experimentId}}"
+      type: path
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200 or not found", () => expect([200, 404]).to.include(res.status));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Gets a registered experiment by experimentId.

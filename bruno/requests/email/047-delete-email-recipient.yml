@@ -1,0 +1,28 @@
+info:
+  name: Delete email recipient
+  type: http
+  seq: 47
+  tags:
+    - manual
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/email/recipients"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "email": "bruno@example.test"
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Removes a recipient and persists the configuration.

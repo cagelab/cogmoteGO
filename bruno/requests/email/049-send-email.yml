@@ -1,0 +1,32 @@
+info:
+  name: Send email
+  type: http
+  seq: 49
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/email"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "subject": "Bruno API test",
+        "html_body": "<p>Synthetic test message from Bruno.</p>",
+        "attachments": [],
+        "embeds": [],
+        "in_reply_to": ""
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Sends an HTML email. Attachment and embed content fields are base64 strings because the Go API uses []byte.

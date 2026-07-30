@@ -1,0 +1,12 @@
+opencollection: 1.0.0
+
+info:
+  name: cogmoteGO API
+
+bundled: false
+
+extensions:
+  bruno:
+    ignore:
+      - endpoints.json
+      - README.md

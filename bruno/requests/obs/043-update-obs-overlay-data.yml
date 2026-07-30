@@ -1,0 +1,31 @@
+info:
+  name: Update OBS overlay data
+  type: http
+  seq: 43
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/obs/data"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "monkey_name": "monkey_001",
+        "trial_id": 42,
+        "start_time": "2026-07-30 13:00:00",
+        "correct_rate": 0.85
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Updates the configured OBS text source with experiment overlay data.

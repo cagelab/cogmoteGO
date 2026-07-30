@@ -1,0 +1,25 @@
+info:
+  name: Get alive message
+  type: http
+  seq: 2
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/alive"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Checks that the service is alive and returns a random monkey message.

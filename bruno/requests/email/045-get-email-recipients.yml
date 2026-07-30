@@ -1,0 +1,25 @@
+info:
+  name: Get email recipients
+  type: http
+  seq: 45
+  tags:
+    - regression
+
+http:
+  method: GET
+  url: "{{baseUrl}}/email/recipients"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Lists configured email recipients.

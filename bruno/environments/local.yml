@@ -1,0 +1,28 @@
+name: local
+variables:
+  - name: baseUrl
+    value: http://localhost:9012/api
+  - name: internalBaseUrl
+    value: http://127.0.0.1:9011/api
+  - name: broadcastName
+    value: bruno-stream
+  - name: proxyNickname
+    value: local-worker
+  - name: experimentId
+    value: replace-with-experiment-id
+  - name: execNickname
+    value: default
+  - name: gitBranch
+    value: main
+  - name: dataFilepath
+    value: replace-with-relative-file
+  - name: backupSourceRootId
+    value: replace-with-source-root-id
+  - name: backupEntry
+    value: replace-with-relative-entry
+  - name: backupDestinationRootId
+    value: replace-with-samba-root-id
+  - name: backupDestinationPath
+    value: experiments/bruno/data
+  - name: archiveFile
+    value: replace-with-local-zip-path

@@ -1,0 +1,20 @@
+info:
+  name: Subscribe default broadcast SSE
+  type: http
+  seq: 8
+  tags:
+    - manual
+    - sse
+
+http:
+  method: GET
+  url: "{{baseUrl}}/broadcast/data/default"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Opens a Server-Sent Events stream and replays history. Manual request: it remains open until cancelled.

@@ -1,0 +1,20 @@
+info:
+  name: Delete all experiments
+  type: http
+  seq: 22
+  tags:
+    - destructive
+    - manual
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/exps"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Deletes every experiment record. This is destructive and should only be run intentionally.

@@ -1,0 +1,25 @@
+info:
+  name: List broadcast endpoints
+  type: http
+  seq: 4
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/broadcast/data"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Lists all in-memory broadcast endpoint names.

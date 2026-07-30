@@ -1,0 +1,19 @@
+info:
+  name: Get OBS status
+  type: http
+  seq: 37
+  tags:
+    - manual
+
+http:
+  method: GET
+  url: "{{baseUrl}}/obs"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Returns OBS version and streaming state. Call Initialize OBS client first.

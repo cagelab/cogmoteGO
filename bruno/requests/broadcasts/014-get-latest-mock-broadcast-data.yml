@@ -1,0 +1,19 @@
+info:
+  name: Get latest mock broadcast data
+  type: http
+  seq: 14
+  tags:
+    - manual
+
+http:
+  method: GET
+  url: "{{baseUrl}}/broadcast/data/mock/latest"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Waits for and returns the latest generated mock trial data; may return 408 on timeout.

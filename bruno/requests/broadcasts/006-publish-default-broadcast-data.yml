@@ -1,0 +1,35 @@
+info:
+  name: Publish default broadcast data
+  type: http
+  seq: 6
+  tags:
+    - regression
+
+http:
+  method: POST
+  url: "{{baseUrl}}/broadcast/data/default"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "event": "trial.updated",
+        "trial_id": 42
+      }
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Publishes an arbitrary raw payload to the built-in default endpoint.

@@ -1,0 +1,25 @@
+info:
+  name: Get device information
+  type: http
+  seq: 3
+  tags:
+    - smoke
+
+http:
+  method: GET
+  url: "{{baseUrl}}/device"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Returns the cogmoteGO instance ID, host, operating system and build metadata.

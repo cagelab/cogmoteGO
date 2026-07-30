@@ -1,0 +1,19 @@
+info:
+  name: Send test email
+  type: http
+  seq: 48
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/email/test"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Sends a test message using configured SMTP credentials and recipients.

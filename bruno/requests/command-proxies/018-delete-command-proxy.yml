@@ -1,0 +1,23 @@
+info:
+  name: Delete command proxy
+  type: http
+  seq: 18
+  tags:
+    - manual
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/cmds/proxies/:nickname"
+  params:
+    - name: nickname
+      value: "{{proxyNickname}}"
+      type: path
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Closes and removes one command proxy.

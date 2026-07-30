@@ -1,0 +1,20 @@
+info:
+  name: Stream mock broadcast data
+  type: http
+  seq: 13
+  tags:
+    - manual
+    - sse
+
+http:
+  method: GET
+  url: "{{baseUrl}}/broadcast/data/mock"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Streams generated mock trial data. Manual long-running request.

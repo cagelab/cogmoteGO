@@ -1,0 +1,19 @@
+info:
+  name: Initialize OBS client
+  type: http
+  seq: 40
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/obs/init"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Connects to local OBS WebSocket, prepares the configured scene and text source.

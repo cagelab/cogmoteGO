@@ -1,0 +1,30 @@
+info:
+  name: Create command proxy
+  type: http
+  seq: 16
+  tags:
+    - manual
+
+http:
+  method: POST
+  url: "{{baseUrl}}/cmds/proxies"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "nickname": "local-worker",
+        "hostname": "127.0.0.1",
+        "port": 5555
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Creates a ZeroMQ REQ proxy and performs a handshake with the configured endpoint. Requires a compatible local worker.

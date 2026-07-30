@@ -1,0 +1,25 @@
+info:
+  name: Get latest default broadcast data
+  type: http
+  seq: 7
+  tags:
+    - regression
+
+http:
+  method: GET
+  url: "{{baseUrl}}/broadcast/data/default/latest"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns data or no history", () => expect([200, 404]).to.include(res.status));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Returns the latest payload from the default endpoint as application/json.

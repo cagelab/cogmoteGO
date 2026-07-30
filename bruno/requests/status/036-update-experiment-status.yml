@@ -1,0 +1,35 @@
+info:
+  name: Update experiment status
+  type: http
+  seq: 36
+  tags:
+    - regression
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/status"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "id": "{{experimentId}}",
+        "is_running": false
+      }
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 200", () => expect(res.status).to.equal(200));
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  Partially updates id and/or is_running in the global experiment status.
